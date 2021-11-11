@@ -1,6 +1,7 @@
 #include "Snake.h"
 #include "Food.h"
 #include "Init.h"
+#include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,7 +57,7 @@ void DrawSnake(SDL_Renderer **ren, SDL_Texture *head, SDL_Texture *body){
     }
 }
 
-bool SnakeLogic(){
+bool SnakeLogic(Mix_Chunk *bite, Mix_Chunk *lose){
     if (userStarted){
         for (int i = snakeLength - 1; i > 0; i--){
             while(Snake[i].x == GetFoodCoordinates().x && Snake[i].y == GetFoodCoordinates().y) {
@@ -64,6 +65,7 @@ bool SnakeLogic(){
                 break;
             }
             if (Snake[0].x == Snake[i].x && Snake[0].y == Snake[i].y){
+                Mix_PlayChannel(-1, lose, 0);
                 return false;
             }
             // Make sure tail follows the head
@@ -75,10 +77,12 @@ bool SnakeLogic(){
     // If snake eats the food        
     if (Snake[0].x == GetFoodCoordinates().x && Snake[0].y == GetFoodCoordinates().y){
         GenFoodLocation();
+        Mix_PlayChannel(-1, bite, 0);
         snakeLength++;
     }
     // If snake goes over the boundary
     if(Snake[0].x + 20 > Width || Snake[0].x < 0 || Snake[0].y + 20 > Height || Snake[0].y < 0){
+        Mix_PlayChannel(-1, lose, 0);
         return false;
     }
     

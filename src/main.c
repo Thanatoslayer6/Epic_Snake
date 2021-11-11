@@ -23,6 +23,7 @@ SDL_Rect exitSrc = { (Width/2) - 100, (Height/2) + 60, 0, 0 };
 int main(int argc, char **argv){
     // Initialize a window and a renderer
     INIT("Epic Snake", Width, Height, &Window, &Renderer);
+    // Initialize audio and sound effects
     INITMIXER();
 
     // Load resources
@@ -43,6 +44,8 @@ int main(int argc, char **argv){
     SDL_Texture *Play_Text = LoadTextTexture(MainMenuFont_1, "Press 'p' to play", &playSrc, &Renderer);
     SDL_Texture *Quit_Text_1 = LoadTextTexture(MainMenuFont_1, "Press 'x' to exit", &exitSrc, &Renderer);
     Mix_Music *BGM = LoadMusic("res/sfx/bgm.mp3");
+    Mix_Chunk *Lose = LoadSFX("res/sfx/lose.wav");
+    Mix_Chunk *Bite = LoadSFX("res/sfx/bite.wav");
 
     // Load Snake default values and some important variables
     SETUP();
@@ -64,6 +67,8 @@ int main(int argc, char **argv){
             drawText(GoToMainMenu_Text, gomenuSrc, &Renderer);
             drawText(Quit_Text, quitSrc, &Renderer);           
         } else {
+            // Input
+            SnakeInput(getProgramEvent());
             // Score
             char *Points;
             sprintf(Points, "Score: %d", GetScore());
@@ -76,8 +81,7 @@ int main(int argc, char **argv){
             DrawSnake(&Renderer, SnakeHead, SnakeBody);
 
             // Logic
-            SnakeInput(getProgramEvent());
-            if (!SnakeLogic()){
+            if (!SnakeLogic(Bite, Lose)){
                 setUserLost(true);
             }
         }
