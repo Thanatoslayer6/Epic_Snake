@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="EpicSnake" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/Release/EpicSnakeOnWindows" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-I" />
+					<Add option="./include/" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-I" />
+			<Add option="./include/" />
+			<Add directory="../../../../../SDL2_x64/include" />
+		</Compiler>
+		<Linker>
+			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -mwindows" />
+			<Add directory="../../../../../SDL2_x64/lib" />
+		</Linker>
+		<Unit filename="Makefile" />
+		<Unit filename="include/Event.h" />
+		<Unit filename="include/Food.h" />
+		<Unit filename="include/Init.h" />
+		<Unit filename="include/Render.h" />
+		<Unit filename="include/Snake.h" />
+		<Unit filename="include/Sound.h" />
+		<Unit filename="res/Grass.png" />
+		<Unit filename="res/sfx/bgm.mp3" />
+		<Unit filename="res/sfx/bite.wav" />
+		<Unit filename="res/sfx/lose.wav" />
+		<Unit filename="res/snakebody.png" />
+		<Unit filename="res/snakefood.png" />
+		<Unit filename="res/snakehead.png" />
+		<Unit filename="res/ttf/AnonymiceNerd.ttf" />
+		<Unit filename="res/ttf/AvenuePixel-Regular Mac.ttf" />
+		<Unit filename="res/ttf/AvenuePixel-Regular.ttf" />
+		<Unit filename="res/ttf/AvenuePixelSoft-Stroke-Regular Mac.ttf" />
+		<Unit filename="res/ttf/AvenuePixelSoft-Stroke-Regular.ttf" />
+		<Unit filename="res/ttf/AvenuePixelStroke-Regular Mac.ttf" />
+		<Unit filename="res/ttf/AvenuePixelStroke-Regular.ttf" />
+		<Unit filename="res/ttf/Khronopix.ttf" />
+		<Unit filename="res/ttf/KhronopixMono.ttf" />
+		<Unit filename="res/ttf/m6x11.ttf" />
+		<Unit filename="src/Event.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/Food.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/Init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/Render.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/Snake.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/Sound.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -16,9 +16,15 @@ Segment Snake[1000];
 static int dx, dy, snakeLength = 3;
 static char currDir;
 static bool userStarted = false;
+static char Points[32];
 
 int GetScore(){
     return (snakeLength - 3);
+}
+
+char *GetScoreText(){
+    sprintf(Points, "Score: %d", (snakeLength - 3));
+    return Points;
 }
 
 void SetScore(int z){
@@ -74,7 +80,7 @@ bool SnakeLogic(Mix_Chunk *bite, Mix_Chunk *lose){
         }
     }
 
-    // If snake eats the food        
+    // If snake eats the food
     if (Snake[0].x == GetFoodCoordinates().x && Snake[0].y == GetFoodCoordinates().y){
         GenFoodLocation();
         Mix_PlayChannel(-1, bite, 0);
@@ -85,7 +91,7 @@ bool SnakeLogic(Mix_Chunk *bite, Mix_Chunk *lose){
         Mix_PlayChannel(-1, lose, 0);
         return false;
     }
-    
+
     // Always add dx and dy to head
     Snake[0].x += dx;
     Snake[0].y += dy;

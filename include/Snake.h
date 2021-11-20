@@ -9,6 +9,7 @@ typedef struct {
 
 void SnakeInput(SDL_Event *e);
 int GetScore();
+char *GetScoreText();
 bool SnakeLogic(Mix_Chunk *bite, Mix_Chunk *lose);
 void DrawSnake(SDL_Renderer **ren, SDL_Texture *head, SDL_Texture *body);
 void SnakeInit();

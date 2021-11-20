@@ -17,7 +17,7 @@ bool getUserLost(){
 }
 
 bool getOnMainMenu(){
-    return OnMainMenu; 
+    return OnMainMenu;
 }
 
 void setUserLost(bool setstate){
@@ -55,6 +55,7 @@ void EventLoop(SDL_Event *ev){
             } else if (ev->key.keysym.scancode == SDL_SCANCODE_ESCAPE){
                 IsGameOver = false;
                 OnMainMenu = true;
+                SETUP();
                 break;
             }
         }

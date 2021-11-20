@@ -3,7 +3,7 @@
 #include "Snake.h"
 
 void INIT(const char *title, int width, int height, SDL_Window **Window, SDL_Renderer **Renderer){
-    // Initialize sdl, img, and ttf 
+    // Initialize sdl, img, and ttf
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0){
         printf("Error SDL_Init\n");
     }
@@ -26,7 +26,6 @@ void INIT(const char *title, int width, int height, SDL_Window **Window, SDL_Ren
 }
 
 void SETUP(){
-    // Gameloop and Setups
     GenFoodLocation();
     SetScore(3);
     SnakeDestroy();

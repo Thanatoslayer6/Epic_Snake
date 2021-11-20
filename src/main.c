@@ -4,11 +4,12 @@
 #include "Snake.h"
 #include "Food.h"
 #include "Sound.h"
-#include <SDL2/SDL_mixer.h>
 
 SDL_Window *Window = NULL;
 SDL_Renderer *Renderer = NULL;
+
 // Score
+int temp = 0;
 SDL_Rect scrSrc = { 5, 5, 0, 0 };
 // Gameover
 SDL_Rect gmSrc = { (Width/2) - 130, (Height/2) - 100, 0, 0 };
@@ -32,6 +33,7 @@ int main(int argc, char **argv){
     TTF_Font *TryFont = LoadFont("res/ttf/AnonymiceNerd.ttf", 18);
     TTF_Font *MainMenuFont = LoadFont("res/ttf/AvenuePixelStroke-Regular.ttf", 120);
     TTF_Font *MainMenuFont_1 = LoadFont("res/ttf/m6x11.ttf", 24);
+    SDL_Texture *Score = NULL;
     SDL_Texture *Grass = LoadTexture("res/Grass.png", &Renderer);
     SDL_Texture *SnakeHead = LoadTexture("res/snakehead.png", &Renderer);
     SDL_Texture *SnakeBody = LoadTexture("res/snakebody.png", &Renderer);
@@ -65,16 +67,24 @@ int main(int argc, char **argv){
             drawText(GameOver_Text, gmSrc, &Renderer);
             drawText(TryAgain_Text, trySrc, &Renderer);
             drawText(GoToMainMenu_Text, gomenuSrc, &Renderer);
-            drawText(Quit_Text, quitSrc, &Renderer);           
+            drawText(Quit_Text, quitSrc, &Renderer);
         } else {
             // Input
             SnakeInput(getProgramEvent());
-            // Score
-            char *Points;
-            sprintf(Points, "Score: %d", GetScore());
-            SDL_Texture *Score = LoadTextTexture(ScoreFont, Points, &scrSrc, &Renderer);
 
-            // Draw 
+            // Score handler if score resets create texture
+            if (temp == 0 && Score == NULL){
+                Score = LoadTextTexture(ScoreFont, GetScoreText(), &scrSrc, &Renderer);
+            }
+            // If snake eats food, update new texture by destroying and creating again
+            if (temp < GetScore() && Score != NULL){
+                SDL_DestroyTexture(Score);
+                Score = NULL;
+                Score = LoadTextTexture(ScoreFont, GetScoreText(), &scrSrc, &Renderer);
+                temp++;
+            }
+
+            // Draw
             drawBackground(&Renderer, Grass);
             drawText(Score, scrSrc, &Renderer);
             DrawFood(&Renderer, SnakeFood);
@@ -82,6 +92,10 @@ int main(int argc, char **argv){
 
             // Logic
             if (!SnakeLogic(Bite, Lose)){
+                // Reset score and destroy texture
+                temp = 0;
+                SDL_DestroyTexture(Score);
+                Score = NULL;
                 setUserLost(true);
             }
         }
@@ -92,4 +106,5 @@ int main(int argc, char **argv){
 
     // Quit the program
     QUIT(&Window, &Renderer);
+    return 0;
 }
