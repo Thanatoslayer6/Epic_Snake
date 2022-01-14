@@ -1,7 +1,9 @@
 #include "Snake.h"
+#include "Event.h"
 #include "Food.h"
 #include "Init.h"
-#include <SDL2/SDL_mixer.h>
+#include "SDL2/SDL_events.h"
+#include "SDL2/SDL_mixer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -98,34 +100,53 @@ bool SnakeLogic(Mix_Chunk *bite, Mix_Chunk *lose){
     return true;
 }
 
-void SnakeInput(SDL_Event *e){
-    switch(e->key.state){
-        case 'a': case 'h':
-            if (currDir == 'r' || currDir == 0) break;
-            currDir = 'l';
-            dx = -20;
-            dy = 0;
+void SnakeInput(SDL_Event *e, bool *pause){
+    while(SDL_PollEvent(e)){
+        if (*pause == false){
+            switch(e->key.state){
+                case 'a': case 'h':
+                    if (currDir == 'r' || currDir == 0) break;
+                    currDir = 'l';
+                    dx = -20;
+                    dy = 0;
+                    break;
+                case 'd': case 'l':
+                    if (currDir == 'l') break;
+                    currDir = 'r';
+                    dx = 20;
+                    dy = 0;
+                    userStarted = true;
+                    break;
+                case 's': case 'j':
+                    if (currDir == 'u') break;
+                    currDir = 'd';
+                    dx = 0;
+                    dy = 20;
+                    userStarted = true;
+                    break;
+                case 'w': case 'k':
+                    if (currDir == 'd') break;
+                    currDir = 'u';
+                    dx = 0;
+                    dy = -20;
+                    userStarted = true;
+                    break;
+            }
+        }
+        // Pause
+        if (*pause == false && e->key.state == 'p' && userStarted == true){
+            *pause = true;
             break;
-        case 'd': case 'l':
-            if (currDir == 'l') break;
-            currDir = 'r';
-            dx = 20;
-            dy = 0;
-            userStarted = true;
+        }
+        // Unpause
+        if (*pause == true && e->key.state == 'p'){
+            *pause = false;
             break;
-        case 's': case 'j':
-            if (currDir == 'u') break;
-            currDir = 'd';
-            dx = 0;
-            dy = 20;
-            userStarted = true;
+        }
+        // Exit the game
+        if (*pause == true && e->key.state == 'x' ){
+            setProgramRunning(false);
             break;
-        case 'w': case 'k':
-            if (currDir == 'd') break;
-            currDir = 'u';
-            dx = 0;
-            dy = -20;
-            userStarted = true;
-            break;
+        }
     }
 }

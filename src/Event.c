@@ -58,7 +58,7 @@ void EventLoop(SDL_Event *ev){
                 SETUP();
                 break;
             }
-        }
+        }     
     }
 }
 

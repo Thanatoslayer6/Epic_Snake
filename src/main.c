@@ -16,10 +16,15 @@ SDL_Rect gmSrc = { (Width/2) - 130, (Height/2) - 100, 0, 0 };
 SDL_Rect trySrc = { (Width/2) - 120, (Height/2), 0, 0 };
 SDL_Rect gomenuSrc = { (Width/2) - 140, (Height/2) + 20, 0, 0 };
 SDL_Rect quitSrc = { (Width/2) - 70, (Height/2) + 40, 0, 0 };
+// Pause
+SDL_Rect unpauseSrc = { (Width/2) - 100, (Height/2) + 100, 0, 0 };
+SDL_Rect pauseSrc = { (Width/2) - 165, (Height/2) - 100, 0, 0 };
 // Main Menu
 SDL_Rect menuSrc = { (Width/2) - 180, (Height/2) - 100, 0, 0 };
 SDL_Rect playSrc = { (Width/2) - 100, (Height/2) + 30, 0, 0 };
 SDL_Rect exitSrc = { (Width/2) - 100, (Height/2) + 60, 0, 0 };
+
+static bool paused = false;
 
 int main(int argc, char **argv){
     // Initialize a window and a renderer
@@ -45,6 +50,8 @@ int main(int argc, char **argv){
     SDL_Texture *MainMenu_Text = LoadTextTexture(MainMenuFont, "Epic Snake", &menuSrc, &Renderer);
     SDL_Texture *Play_Text = LoadTextTexture(MainMenuFont_1, "Press 'p' to play", &playSrc, &Renderer);
     SDL_Texture *Quit_Text_1 = LoadTextTexture(MainMenuFont_1, "Press 'x' to exit", &exitSrc, &Renderer);
+    SDL_Texture *Pause_Text = LoadTextTexture(GameOverFont, "Game Paused", &pauseSrc, &Renderer);
+    SDL_Texture *Unpause_Text = LoadTextTexture(TryFont, "Press 'p' to unpause", &unpauseSrc, &Renderer);
     Mix_Music *BGM = LoadMusic("res/sfx/bgm.mp3");
     Mix_Chunk *Lose = LoadSFX("res/sfx/lose.wav");
     Mix_Chunk *Bite = LoadSFX("res/sfx/bite.wav");
@@ -55,22 +62,21 @@ int main(int argc, char **argv){
     Mix_PlayMusic(BGM, -1);
     while(getProgramRunning()){
         Uint32 frameStart = SDL_GetTicks();
-        // Input
-        EventLoop(getProgramEvent());
-        if (getOnMainMenu()){
+        if (getOnMainMenu()){ // On main menu
+            EventLoop(getProgramEvent()); // Input
             SDL_SetRenderDrawColor(Renderer, 50, 100, 50, 255);
             SDL_RenderClear(Renderer);
             drawText(MainMenu_Text, menuSrc, &Renderer);
             drawText(Play_Text, playSrc, &Renderer);
             drawText(Quit_Text_1, exitSrc, &Renderer);
-        } else if (getUserLost()){
+        } else if (getUserLost()){ // If user looses
+            EventLoop(getProgramEvent()); // Input
             drawText(GameOver_Text, gmSrc, &Renderer);
             drawText(TryAgain_Text, trySrc, &Renderer);
             drawText(GoToMainMenu_Text, gomenuSrc, &Renderer);
             drawText(Quit_Text, quitSrc, &Renderer);
-        } else {
-            // Input
-            SnakeInput(getProgramEvent());
+        } else { // Game is running
+            SnakeInput(getProgramEvent(), &paused); // Input
 
             // Score handler if score resets create texture
             if (temp == 0 && Score == NULL){
@@ -84,20 +90,28 @@ int main(int argc, char **argv){
                 temp++;
             }
 
-            // Draw
-            drawBackground(&Renderer, Grass);
-            drawText(Score, scrSrc, &Renderer);
-            DrawFood(&Renderer, SnakeFood);
-            DrawSnake(&Renderer, SnakeHead, SnakeBody);
+            if (paused == false) { // If game is playing
+                // Draw
+                drawBackground(&Renderer, Grass);
+                drawText(Score, scrSrc, &Renderer);
+                DrawFood(&Renderer, SnakeFood);
+                DrawSnake(&Renderer, SnakeHead, SnakeBody);
 
-            // Logic
-            if (!SnakeLogic(Bite, Lose)){
-                // Reset score and destroy texture
-                temp = 0;
-                SDL_DestroyTexture(Score);
-                Score = NULL;
-                setUserLost(true);
+                // Logic
+                if (!SnakeLogic(Bite, Lose)){
+                    // Reset score and destroy texture
+                    temp = 0;
+                    SDL_DestroyTexture(Score);
+                    Score = NULL;
+                    setUserLost(true);
+                }
+            } else { // If game is paused...
+                drawText(Pause_Text, pauseSrc, &Renderer);
+                drawText(Unpause_Text, unpauseSrc, &Renderer);
+                drawText(GoToMainMenu_Text, gomenuSrc, &Renderer);
+                drawText(Quit_Text, quitSrc, &Renderer);
             }
+        
         }
 
         SDL_RenderPresent(Renderer);

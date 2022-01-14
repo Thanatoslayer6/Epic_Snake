@@ -6,8 +6,8 @@
 typedef struct {
     int x, y;
 } Segment;
-
-void SnakeInput(SDL_Event *e);
+/* void SnakeInput(SDL_Event *e); */
+void SnakeInput(SDL_Event *e, bool *pause);
 int GetScore();
 char *GetScoreText();
 bool SnakeLogic(Mix_Chunk *bite, Mix_Chunk *lose);
